@@ -3,85 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>宿舍分帳 - 粉紫浪漫版</title>
+    <title>酒鬼宿舍分帳</title>
     <style>
         body { 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
             padding: 30px; 
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             color: #4a4e69; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0;
         }
         .container { 
-            max-width: 650px; 
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95); 
-            padding: 40px; 
-            border-radius: 20px; 
+            max-width: 650px; width: 100%; background: rgba(255, 255, 255, 0.95); 
+            padding: 40px; border-radius: 20px; 
             box-shadow: 0 10px 25px rgba(235, 185, 222, 0.4);
             border: 2px solid #f3e5f5;
         }
-        h2 { 
-            text-align: center; 
-            color: #9c27b0; 
-            margin-bottom: 30px; 
-            font-size: 26px;
-            text-shadow: 1px 1px 2px rgba(156, 39, 176, 0.2);
-        }
+        h2 { text-align: center; color: #9c27b0; margin-bottom: 30px; }
         .input-group { margin-bottom: 25px; }
-        label { 
-            display: block; 
-            margin-bottom: 10px; 
-            font-weight: bold; 
-            color: #6a1b9a;
-        }
+        label { display: block; margin-bottom: 10px; font-weight: bold; color: #6a1b9a; }
         input, textarea { 
-            width: 100%; 
-            padding: 15px; 
-            border: 2px solid #e1bee7; 
-            border-radius: 12px; 
-            box-sizing: border-box; 
-            font-size: 16px; 
-            transition: 0.3s;
+            width: 100%; padding: 15px; border: 2px solid #e1bee7; border-radius: 12px; 
+            box-sizing: border-box; font-size: 16px; transition: 0.3s;
         }
-        input:focus, textarea:focus {
-            border-color: #ba68c8;
-            box-shadow: 0 0 10px rgba(186, 104, 200, 0.3);
-            outline: none;
-        }
+        input:focus, textarea:focus { border-color: #ba68c8; outline: none; box-shadow: 0 0 8px rgba(186, 104, 200, 0.2); }
         textarea { height: 160px; font-size: 14px; }
         button { 
-            width: 100%; 
-            padding: 16px; 
-            background: linear-gradient(135deg, #ec407a 0%, #ab47bc 100%);
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            font-size: 18px; 
-            font-weight: bold; 
-            transition: 0.2s;
-            margin-top: 10px;
+            width: 100%; padding: 16px; background: linear-gradient(135deg, #ec407a 0%, #ab47bc 100%);
+            color: white; border: none; border-radius: 12px; cursor: pointer; 
+            font-size: 18px; font-weight: bold; transition: 0.2s; margin-top: 10px;
         }
-        button:hover { 
-            box-shadow: 0 5px 15px rgba(236, 64, 122, 0.4);
-            transform: translateY(-2px);
-        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236, 64, 122, 0.3); }
         #result { 
-            margin-top: 35px; 
-            white-space: pre-wrap; 
-            background-color: #fce4ec; 
-            color: #880e4f; 
-            padding: 25px; 
-            border-radius: 15px; 
-            font-family: 'Courier New', Courier, monospace; 
-            font-size: 15px; 
-            line-height: 1.8; 
-            border: 2px dashed #f8bbd0;
+            margin-top: 35px; white-space: pre-wrap; background-color: #fce4ec; 
+            color: #880e4f; padding: 25px; border-radius: 15px; 
+            font-family: 'Courier New', Courier, monospace; font-size: 15px; 
+            line-height: 1.8; border: 2px dashed #f8bbd0;
         }
         .hint { font-size: 13px; color: #8e24aa; margin-bottom: 12px; display: block; }
     </style>
@@ -89,16 +46,16 @@
 <body>
 
 <div class="container">
-    <h2>宿舍分帳小幫手 🌸</h2>
+    <h2>酒鬼宿舍分帳小幫手 🌸</h2>
     
     <div class="input-group">
-        <label>1. 每人應付房租 (33000 ÷ 4)</label>
+        <label>1. 每人基本房租</label>
         <input type="number" id="baseRent" value="8250">
     </div>
 
     <div class="input-group">
         <label>2. 貼上表格內容</label>
-        <span class="hint">從 Notion/Excel 複製整列貼上</span>
+        <span class="hint">複製 Notion/Excel 列貼上（名字/項目/金額）</span>
         <textarea id="pasteArea" placeholder="在此處貼上內容..."></textarea>
     </div>
 
@@ -113,7 +70,7 @@
         const baseRent = parseFloat(document.getElementById('baseRent').value);
         
         if (!rawText) {
-            alert("請貼入內容喔！");
+            alert("請先貼入內容喔！");
             return;
         }
 
@@ -144,30 +101,32 @@
         });
 
         if (expenses.length === 0) {
-            alert("解析失敗，請確認格式。");
+            alert("解析失敗，請確認貼上內容。");
             return;
         }
 
         const extraPerPerson = totalExtra / 4;
 
-        // --- 開始組建報表文字 ---
+        // 組建文字
         let report = `(${currentMonth}月)月雜費項目:\n`;
         expenses.forEach(ex => {
             report += `${ex.payer} - ${ex.itemName} : $${ex.amount}\n`;
         });
-
-        report += `\n總金額共 : $${totalExtra}\n`;
-        report += `====${nextMonth}月一號前請匯款到我的戶頭====\n\n`;
+        report += `總金額共 : $${totalExtra}\n`;
+        report += `====${nextMonth}月1號前請匯款到我的戶頭====\n\n`;
 
         targetOrder.forEach(name => {
             const reimbursement = roommatePaid[name];
-            const finalPay = (baseRent + extraPerPerson) - reimbursement;
-            report += `${name} : (${baseRent} + ${extraPerPerson.toFixed(1)}) - ${reimbursement} = ${finalPay.toFixed(1)}\n`;
+            // 計算：(基本房租 + 每人雜費) - 自己墊的錢，最後進行四捨五入
+            const rawFinalPay = (baseRent + extraPerPerson) - reimbursement;
+            const finalPay = Math.round(rawFinalPay);
+            
+            report += `${name} : ${baseRent} + ${extraPerPerson.toFixed(1)} - ${reimbursement} = ${finalPay}\n`;
         });
 
-        report += "\n-上式公式解釋-\n";
-        report += `(個人基本房租 + 每人應分擔總雜費 $${extraPerPerson.toFixed(1)}) - 自己已墊付的金額 = 本月應匯款\n`;
-        report += "========\n";
+        report += `\n-公式解釋 and 四捨五入-\n`;
+        report += `(每人房租 + 每人應分擔雜費 $${extraPerPerson.toFixed(1)}) - 自己已代墊雜費 = 應匯款金額(採四捨五入至整數)\n`;
+        report += `========`;
 
         const resultDiv = document.getElementById('result');
         resultDiv.innerText = report;
