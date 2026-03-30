@@ -8,129 +8,233 @@
         body { 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
             padding: 30px; 
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            color: #4a4e69; 
-            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #fdfbfb 0%, #f3e5f5 100%);
+            color: #3e0b61; 
+            display: flex; justify-content: center; align-items: flex-start;
             min-height: 100vh; margin: 0;
         }
         .container { 
-            max-width: 650px; width: 100%; background: rgba(255, 255, 255, 0.95); 
+            max-width: 750px; width: 100%; background: rgba(255, 255, 255, 0.98); 
             padding: 40px; border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(235, 185, 222, 0.4);
-            border: 2px solid #f3e5f5;
+            box-shadow: 0 10px 30px rgba(62, 11, 97, 0.15);
+            border: 2px solid #e1bee7;
         }
-        h2 { text-align: center; color: #9c27b0; margin-bottom: 30px; }
-        .input-group { margin-bottom: 25px; }
+        h2 { text-align: center; color: #3e0b61; margin-bottom: 25px; font-weight: 900; }
+        .input-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 10px; font-weight: bold; color: #6a1b9a; }
-        input, textarea { 
-            width: 100%; padding: 15px; border: 2px solid #e1bee7; border-radius: 12px; 
-            box-sizing: border-box; font-size: 16px; transition: 0.3s;
+        input, textarea, select { 
+            width: 100%; padding: 12px; border: 2px solid #e1bee7; border-radius: 10px; 
+            box-sizing: border-box; font-size: 15px; transition: 0.3s;
+            background-color: #fff; color: #3e0b61;
         }
-        input:focus, textarea:focus { border-color: #ba68c8; outline: none; box-shadow: 0 0 8px rgba(186, 104, 200, 0.2); }
-        textarea { height: 160px; font-size: 14px; }
+        textarea { height: 150px; font-size: 14px; background-color: #fafafa; }
+        
+        .action-bars { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .row-buttons { display: flex; gap: 10px; }
+        
         button { 
-            width: 100%; padding: 16px; background: linear-gradient(135deg, #ec407a 0%, #ab47bc 100%);
-            color: white; border: none; border-radius: 12px; cursor: pointer; 
-            font-size: 18px; font-weight: bold; transition: 0.2s; margin-top: 10px;
+            padding: 14px; border: none; border-radius: 10px; cursor: pointer; 
+            font-size: 16px; font-weight: bold; transition: 0.2s;
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(236, 64, 122, 0.3); }
+        
+        .btn-add-feature { background-color: #ba68c8; color: white; flex: 2; }
+        .btn-clear { background-color: #e0e0e0; color: #616161; flex: 1; }
+        .btn-calc { 
+            background: linear-gradient(135deg, #6a1b9a 0%, #3e0b61 100%); 
+            color: white; width: 100%; font-size: 18px; 
+        }
+        .btn-copy {
+            background-color: #fce4ec; color: #880e4f; border: 2px solid #f8bbd0;
+            width: 100%; margin-top: 10px; display: none;
+        }
+        .btn-more { background-color: #8e24aa; color: white; flex: 1; }
+        .btn-insert { background-color: #4caf50; color: white; flex: 1; }
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .manual-entry {
+            background-color: #f3e5f5; border: 2px dashed #ba68c8;
+            padding: 20px; border-radius: 15px; margin-top: 15px; display: none;
+        }
+        .entry-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .entry-row input, .entry-row select { width: 25%; }
+
         #result { 
-            margin-top: 35px; white-space: pre-wrap; background-color: #fce4ec; 
-            color: #880e4f; padding: 25px; border-radius: 15px; 
+            margin-top: 20px; white-space: pre-wrap; 
+            background-color: #f3e5f5; color: #4a148c;
+            padding: 25px; border-radius: 15px; 
             font-family: 'Courier New', Courier, monospace; font-size: 15px; 
-            line-height: 1.8; border: 2px dashed #f8bbd0;
+            line-height: 1.8; border: 2px dashed #ba68c8;
         }
-        .hint { font-size: 13px; color: #8e24aa; margin-bottom: 12px; display: block; }
+        .hint { font-size: 13px; color: #8e24aa; margin-bottom: 8px; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>酒鬼宿舍分帳小幫手 🌸</h2>
+    <h2>宿舍分帳小幫手 🌸</h2>
     
     <div class="input-group">
-        <label>1. 每人基本房租</label>
+        <label>1. 每人基本房租 (33000 ÷ 4)</label>
         <input type="number" id="baseRent" value="8250">
     </div>
 
     <div class="input-group">
-        <label>2. 貼上表格內容</label>
-        <span class="hint">複製 Notion/Excel 列貼上（名字/項目/金額）</span>
-        <textarea id="pasteArea" placeholder="在此處貼上內容..."></textarea>
+        <label>2. 雜費內容 (貼上或從下方手動加入)</label>
+        <textarea id="pasteArea" placeholder="若無雜費請留空，直接點擊下方 [生成結算報表]..."></textarea>
+        
+        <div class="action-bars">
+            <div class="row-buttons">
+                <button class="btn-add-feature" onclick="toggleManual()">➕ 手動新增費用</button>
+                <button class="btn-clear" onclick="clearAll()">🗑️ 清空內容</button>
+            </div>
+            <button class="btn-calc" onclick="generateReport()">生成結算報表 ✨</button>
+        </div>
+
+        <div id="manualEntryArea" class="manual-entry">
+            <span class="hint">請輸入完整資料再插入文字框</span>
+            <div id="rowContainer">
+                <div class="entry-row">
+                    <input type="text" placeholder="項目" class="m-item">
+                    <input type="date" class="m-date">
+                    <input type="number" placeholder="金額" class="m-amount">
+                    <select class="m-payer">
+                        <option value="LISA">LISA</option>
+                        <option value="雲暇">雲暇</option>
+                        <option value="MIYU">MIYU</option>
+                        <option value="弱貓">弱貓</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group" style="display:flex; gap:10px;">
+                <button class="btn-more" onclick="addNewRow()">再多一筆資料</button>
+                <button class="btn-insert" onclick="insertToTextArea()">確認插入文字框</button>
+            </div>
+        </div>
     </div>
 
-    <button onclick="generateReport()">生成結算報表 ✨</button>
-
+    <button id="copyBtn" class="btn-copy" onclick="copyResult()">📋 一鍵複製報表內容</button>
     <div id="result" style="display:none;"></div>
 </div>
 
 <script>
+    const roommates = ["LISA", "雲暇", "MIYU", "弱貓"];
+
+    function toggleManual() {
+        const area = document.getElementById('manualEntryArea');
+        area.style.display = area.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function addNewRow() {
+        const container = document.getElementById('rowContainer');
+        const newRow = document.createElement('div');
+        newRow.className = 'entry-row';
+        newRow.innerHTML = `
+            <input type="text" placeholder="項目" class="m-item">
+            <input type="date" class="m-date">
+            <input type="number" placeholder="金額" class="m-amount">
+            <select class="m-payer">${roommates.map(name => `<option value="${name}">${name}</option>`).join('')}</select>
+        `;
+        container.appendChild(newRow);
+    }
+
+    function insertToTextArea() {
+        const items = document.querySelectorAll('.m-item');
+        const dates = document.querySelectorAll('.m-date');
+        const amounts = document.querySelectorAll('.m-amount');
+        const payers = document.querySelectorAll('.m-payer');
+        let newText = "";
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].value && amounts[i].value) {
+                newText += `${items[i].value}\t${dates[i].value}\t手動輸入\t$${amounts[i].value}\t無\t${payers[i].value}\n`;
+            }
+        }
+        const textArea = document.getElementById('pasteArea');
+        textArea.value = (textArea.value.trim() ? textArea.value + "\n" : "") + newText.trim();
+        
+        document.getElementById('rowContainer').innerHTML = `
+            <div class="entry-row">
+                <input type="text" placeholder="項目" class="m-item">
+                <input type="date" class="m-date">
+                <input type="number" placeholder="金額" class="m-amount">
+                <select class="m-payer">${roommates.map(name => `<option value="${name}">${name}</option>`).join('')}</select>
+            </div>
+        `;
+        toggleManual();
+    }
+
+    function clearAll() {
+        if(confirm("確定要清空所有內容嗎？")) {
+            document.getElementById('pasteArea').value = "";
+            document.getElementById('result').style.display = "none";
+            document.getElementById('copyBtn').style.display = "none";
+            document.getElementById('manualEntryArea').style.display = "none";
+        }
+    }
+
     function generateReport() {
         const rawText = document.getElementById('pasteArea').value.trim();
         const baseRent = parseFloat(document.getElementById('baseRent').value);
-        
-        if (!rawText) {
-            alert("請先貼入內容喔！");
-            return;
-        }
 
         const now = new Date();
         const currentMonth = now.getMonth() + 1;
         const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
 
-        const targetOrder = ["LISA", "雲暇", "MIYU", "弱貓"];
-        const lines = rawText.split('\n');
-        let expenses = [];
         let roommatePaid = { "LISA": 0, "雲暇": 0, "MIYU": 0, "弱貓": 0 };
         let totalExtra = 0;
+        let expenses = [];
 
-        lines.forEach(line => {
-            const cols = line.split(/\t| {2,}/); 
-            if (cols.length < 4 || line.includes("項目")) return;
-
-            const itemName = cols[0].trim();
-            const amountStr = cols[3].replace(/[$,]/g, '');
-            const amount = parseFloat(amountStr);
-            const payer = cols[cols.length - 1].trim();
-
-            if (!isNaN(amount) && roommatePaid.hasOwnProperty(payer)) {
-                expenses.push({ itemName, amount, payer });
-                roommatePaid[payer] += amount;
-                totalExtra += amount;
-            }
-        });
-
-        if (expenses.length === 0) {
-            alert("解析失敗，請確認貼上內容。");
-            return;
+        // 只有在 rawText 有內容時才解析
+        if (rawText !== "") {
+            const lines = rawText.split('\n');
+            lines.forEach(line => {
+                const cols = line.split(/\t| {2,}/); 
+                if (cols.length < 4 || line.includes("項目")) return;
+                const amount = parseFloat(cols[3].replace(/[$,]/g, ''));
+                const payer = cols[cols.length - 1].trim();
+                if (!isNaN(amount) && roommatePaid.hasOwnProperty(payer)) {
+                    expenses.push({ itemName: cols[0].trim(), amount, payer });
+                    roommatePaid[payer] += amount;
+                    totalExtra += amount;
+                }
+            });
         }
 
         const extraPerPerson = totalExtra / 4;
 
-        // 組建文字
+        // --- 組建報表文字 ---
         let report = `${currentMonth}月雜費項目:\n`;
-        expenses.forEach(ex => {
-            report += `${ex.payer} - ${ex.itemName} : $${ex.amount}\n`;
-        });
+        
+        if (expenses.length > 0) {
+            expenses.forEach(ex => { report += `${ex.payer} - ${ex.itemName} : $${ex.amount}\n`; });
+        } else {
+            report += `本月無雜費支出\n`;
+        }
+
         report += `總金額共 : $${totalExtra}\n`;
         report += `====${nextMonth}月1號前請匯款到我的戶頭====\n\n`;
 
-        targetOrder.forEach(name => {
-            const reimbursement = roommatePaid[name];
-            // 計算：(基本房租 + 每人雜費) - 自己墊的錢，最後進行四捨五入
-            const rawFinalPay = (baseRent + extraPerPerson) - reimbursement;
-            const finalPay = Math.round(rawFinalPay);
-            
-            report += `${name} : ${baseRent} + ${extraPerPerson.toFixed(1)} - ${reimbursement} = ${finalPay}\n`;
+        roommates.forEach(name => {
+            const finalPay = Math.round((baseRent + extraPerPerson) - roommatePaid[name]);
+            report += `${name} : ${baseRent} + ${extraPerPerson.toFixed(1)} - ${roommatePaid[name]} = ${finalPay}\n`;
         });
 
-        report += `\n-公式解釋 and 四捨五入-\n`;
-        report += `(每人房租 + 每人應分擔雜費 $${extraPerPerson.toFixed(1)}) - 自己已代墊雜費 = 應匯款金額(採四捨五入至整數)\n`;
-        report += `========`;
+        report += `\n-公式解釋 and 四捨五入-\n(每人房租 + 每人應分擔雜費 $${extraPerPerson.toFixed(1)}) - 自己已代墊雜費 = 應匯款金額(採四捨五入至整數)\n========`;
 
         const resultDiv = document.getElementById('result');
         resultDiv.innerText = report;
         resultDiv.style.display = 'block';
+        document.getElementById('copyBtn').style.display = 'block';
+    }
+
+    function copyResult() {
+        const text = document.getElementById('result').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copyBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "✅ 已複製到剪貼簿！";
+            setTimeout(() => btn.innerText = originalText, 2000);
+        });
     }
 </script>
 
